@@ -1,0 +1,82 @@
+//Y
+acc file
+
+%{
+
+ #include "lex.yy.c"
+
+ #include<stdio.h>
+
+ int valid = 1;
+
+ int yyerror()
+
+ {
+
+ printf("\n Its is not a valid identifier \n");
+
+ valid = 0;
+
+ return 0;
+
+ }
+
+%}
+%token number letter
+
+%%
+
+variable: letter alphanumeric
+
+ |letter;
+
+alphanumeric: letter alphanumeric
+
+ |number alphanumeric
+
+ |letter
+
+ |number;
+
+%%
+
+int main()
+
+{
+
+ printf("\n Enter a name to test as an identifier : ");
+
+ yyparse();
+
+ if(valid)
+
+ {
+
+ printf("\n It is a valid identifier \n ");
+
+ }
+
+}
+
+//Lex file
+
+%option noyywrap
+
+%{
+
+ #include "y.tab.h"
+ %}
+
+%%
+
+[0-9] {return number;}
+
+[a-z] {return letter;}
+
+[\t]+
+
+[\n] {return 0;}
+
+. {return yytext[0];}
+
+%%
